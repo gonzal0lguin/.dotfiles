@@ -1,0 +1,14 @@
+# zsh plugins, loaded by antidote (https://antidote.sh)
+# Order matters: completion paths -> compinit -> fzf-tab -> widgets -> highlighting.
+# After editing, open a new shell (antidote re-generates its static file).
+# Update all plugins with:  antidote update   (or `dot update`)
+
+zsh-users/zsh-completions kind:fpath path:src
+ohmyzsh/ohmyzsh path:plugins/extract          # `extract <archive>` for any format
+
+$ZSH_CONFIG/plugins/completion                 # compinit + completion styles (local)
+
+Aloxaf/fzf-tab                                 # tab-completion menu powered by fzf
+ohmyzsh/ohmyzsh path:plugins/sudo              # ESC ESC puts sudo in front of the command
+zsh-users/zsh-autosuggestions                  # grey suggestions from history (→ accepts)
+zdharma-continuum/fast-syntax-highlighting     # must be last

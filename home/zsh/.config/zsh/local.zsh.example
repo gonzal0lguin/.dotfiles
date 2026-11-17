@@ -1,0 +1,13 @@
+# ~/.config/zsh/local.zsh — machine-specific config (NOT tracked by git).
+# Copy this file to local.zsh and edit. Loaded last, so it can override anything.
+
+# --- ROS 2 -----------------------------------------------------------------
+# [[ -r /opt/ros/jazzy/setup.zsh ]] && source /opt/ros/jazzy/setup.zsh
+# export ROS_DOMAIN_ID=9
+
+# --- project shortcuts --------------------------------------------------------
+# alias myws='source ~/repos/my_ws/install/setup.zsh'
+# alias myenv='source ~/python-venvs/my_env/bin/activate'
+
+# --- tmux autostart (normally done by the terminal, see README) -----------------
+# [[ -z $TMUX && $TERM_PROGRAM != vscode ]] && exec tmux new-session -A -s main

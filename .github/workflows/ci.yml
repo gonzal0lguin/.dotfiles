@@ -1,0 +1,38 @@
+name: ci
+
+on:
+  push:
+  pull_request:
+
+jobs:
+  shellcheck:
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v4
+      - name: shellcheck
+        run: |
+          sudo apt-get update -qq && sudo apt-get install -y -qq shellcheck
+          shellcheck -x install.sh lib/*.sh modules/*.sh home/bin/.local/bin/* \
+            home/tmux/.config/tmux/scripts/*.sh
+      - name: zsh syntax
+        run: |
+          sudo apt-get install -y -qq zsh
+          for f in home/zsh/.zshrc home/zsh/.config/zsh/*.zsh; do zsh -n "$f"; done
+
+  install:
+    runs-on: ubuntu-24.04
+    container: ubuntu:24.04
+    steps:
+      - uses: actions/checkout@v4
+      - name: prepare user
+        run: |
+          apt-get update -qq && apt-get install -y -qq sudo git curl
+          useradd -m -s /bin/bash tester
+          echo 'tester ALL=(ALL) NOPASSWD:ALL' > /etc/sudoers.d/tester
+          cp -r "$GITHUB_WORKSPACE" /home/tester/.dotfiles && chown -R tester: /home/tester/.dotfiles
+      - name: install --all
+        run: sudo -iu tester bash -c '~/.dotfiles/install.sh --all --yes'
+      - name: run it twice (idempotent)
+        run: sudo -iu tester bash -c '~/.dotfiles/install.sh --all --yes'
+      - name: zsh starts cleanly
+        run: sudo -iu tester zsh -ic 'echo ok'

@@ -1,0 +1,8 @@
+# machine-specific / secret files that may be created next to tracked ones
+*.local
+*.local.*
+local.zsh
+secrets.zsh
+!*.example
+.DS_Store
+*.bak

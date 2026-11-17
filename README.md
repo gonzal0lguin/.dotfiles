@@ -53,7 +53,7 @@ Any file the installer would replace is moved to `~/.dotfiles-backup/<date>/` fi
 | `fonts` | **0xProto Nerd Font** (latest nerd-fonts release) | on |
 | `themes` | one theme for every app: `catppuccin-mocha` or `gruvbox-dark` | on |
 | `zsh` | modular zsh, **antidote** plugins, untracked `local.zsh` + `secrets.zsh` | on |
-| `starship` | prompt with git, languages, docker, conda, **ROS distro**, command time | on |
+| `starship` | prompt with git, languages, docker, conda, **ROS distro** (only in a sourced colcon workspace), command time | on |
 | `fzf` | latest fzf (Ubuntu's is too old for `fzf --zsh`) | on |
 | `cli` | eza, ripgrep, fd, bat, zoxide, btop, delta, jq, tldr, ncdu, gh, lazygit | on |
 | `tmux` | config, **stats** or **minimal** status bar, TPM + resurrect/continuum/yank | on |

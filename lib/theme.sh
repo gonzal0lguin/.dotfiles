@@ -41,8 +41,8 @@ apply_theme() {
     echo "color_theme = \"$BTOP_THEME\"" >"$btop_conf"
   fi
 
-  # live reload what can be reloaded
-  if (( ! DRY_RUN )); then
+  # live reload what can be reloaded (DOTFILES_NO_RELOAD=1 skips it, e.g. in tests)
+  if (( ! DRY_RUN )) && [[ -z ${DOTFILES_NO_RELOAD:-} ]]; then
     pkill -USR1 -x kitty 2>/dev/null || true                       # kitty re-reads its config
     local ala="${XDG_CONFIG_HOME:-$HOME/.config}/alacritty/alacritty.toml"
     [[ -e $ala ]] && touch "$ala"                                  # alacritty live reload

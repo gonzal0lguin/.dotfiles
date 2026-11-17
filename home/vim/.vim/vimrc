@@ -1,0 +1,146 @@
+" ~/.vim/vimrc — managed by dotfiles. Leader = Space.
+" Plugins: vim-plug (installs itself). :PlugUpdate to update.
+" Local overrides: ~/.vim/local.vim (untracked).
+
+set nocompatible
+let mapleader = ' '
+
+" ------------------------------------------------------------- plugins ---
+let s:plug = expand('~/.vim/autoload/plug.vim')
+if empty(glob(s:plug)) && executable('curl')
+  silent execute '!curl -fsLo ' . s:plug . ' --create-dirs https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim'
+  autocmd VimEnter * PlugInstall --sync | source $MYVIMRC
+endif
+
+let g:polyglot_disabled = ['sensible']
+
+if filereadable(s:plug)
+  call plug#begin('~/.vim/plugged')
+  " look
+  Plug 'catppuccin/vim', { 'as': 'catppuccin' }
+  Plug 'morhetz/gruvbox'
+  Plug 'itchyny/lightline.vim'
+  Plug 'sheerun/vim-polyglot'
+  " navigation
+  Plug 'junegunn/fzf'                 " uses the fzf binary from PATH
+  Plug 'junegunn/fzf.vim'
+  Plug 'lambdalisue/fern.vim'
+  Plug 'lambdalisue/nerdfont.vim'
+  Plug 'lambdalisue/fern-renderer-nerdfont.vim'
+  Plug 'mbbill/undotree'
+  " git
+  Plug 'airblade/vim-gitgutter'
+  Plug 'tpope/vim-fugitive'
+  " editing
+  Plug 'tpope/vim-commentary'         " gcc / gc{motion}
+  Plug 'tpope/vim-surround'           " cs'\" ds( ysiw]
+  Plug 'LunarWatcher/auto-pairs'
+  call plug#end()
+endif
+
+" ------------------------------------------------------------- general ---
+syntax on
+filetype plugin indent on
+set encoding=utf-8
+set hidden autoread
+set mouse=a
+set updatetime=300
+set backspace=indent,eol,start
+set wildmenu wildoptions=pum
+set shortmess+=c
+if has('clipboard') | set clipboard=unnamedplus | endif   " needs vim-gtk3
+
+" files: no swap/backup, persistent undo
+set noswapfile nobackup nowritebackup
+let s:undo = expand('~/.local/state/vim/undo')
+if !isdirectory(s:undo) | call mkdir(s:undo, 'p') | endif
+let &undodir = s:undo
+set undofile
+
+" ------------------------------------------------------------------ ui ---
+set number relativenumber
+set cursorline
+set signcolumn=yes
+set scrolloff=8 sidescrolloff=8
+set splitright splitbelow
+set laststatus=2 noshowmode showcmd
+set wrap linebreak
+set list listchars=tab:»\ ,trail:·,nbsp:␣,leadmultispace:│\ \ \ 
+set fillchars=vert:│,eob:\ 
+
+" true color, also inside tmux
+if has('termguicolors')
+  let &t_8f = "\<Esc>[38;2;%lu;%lu;%lum"
+  let &t_8b = "\<Esc>[48;2;%lu;%lu;%lum"
+  set termguicolors
+endif
+" cursor: bar in insert, underline in replace, block in normal
+let &t_SI = "\e[6 q"
+let &t_SR = "\e[4 q"
+let &t_EI = "\e[2 q"
+
+" theme follows `dot theme <name>`
+set background=dark
+let s:theme = expand('~/.config/dotfiles/current/vim.vim')
+if filereadable(s:theme)
+  execute 'source ' . s:theme
+else
+  silent! colorscheme catppuccin_mocha
+endif
+if !exists('g:colors_name') | colorscheme habamax | endif
+
+let g:lightline = {
+  \ 'colorscheme': get(g:, 'dotfiles_lightline_theme', 'wombat'),
+  \ 'active': { 'left': [ ['mode', 'paste'], ['gitbranch', 'readonly', 'filename', 'modified'] ] },
+  \ 'component_function': { 'gitbranch': 'FugitiveHead' },
+  \ }
+
+" ------------------------------------------------------- search/indent ---
+set incsearch hlsearch ignorecase smartcase
+set expandtab smarttab shiftwidth=4 softtabstop=4 tabstop=4
+set autoindent smartindent
+
+augroup dotfiles_ft
+  autocmd!
+  autocmd FileType yaml,json,xml,html,css,javascript,typescript,lua,cmake setlocal shiftwidth=2 softtabstop=2
+  autocmd FileType make setlocal noexpandtab
+  autocmd FileType markdown,gitcommit setlocal spell
+  autocmd BufRead,BufNewFile *.launch,*.urdf,*.xacro,*.sdf setfiletype xml
+  " return to last position when reopening a file
+  autocmd BufReadPost * if line("'\"") > 1 && line("'\"") <= line('$') | exe "normal! g`\"" | endif
+augroup END
+
+" ---------------------------------------------------------------- keys ---
+nnoremap <leader><space> :nohlsearch<CR>
+nnoremap j gj
+nnoremap k gk
+nnoremap Y y$
+vnoremap < <gv
+vnoremap > >gv
+nnoremap <leader>w :write<CR>
+nnoremap <leader>q :quit<CR>
+" windows: ctrl + h/j/k/l
+nnoremap <C-h> <C-w>h
+nnoremap <C-j> <C-w>j
+nnoremap <C-k> <C-w>k
+nnoremap <C-l> <C-w>l
+" fzf
+nnoremap <leader>f :Files<CR>
+nnoremap <leader>g :Rg<CR>
+nnoremap <leader>b :Buffers<CR>
+nnoremap <leader>h :History<CR>
+nnoremap <leader>/ :BLines<CR>
+" tree, undo history, git
+nnoremap <leader>e :Fern . -drawer -toggle -reveal=%<CR>
+nnoremap <leader>u :UndotreeToggle<CR>
+nnoremap <leader>gs :Git<CR>
+nnoremap ]h :GitGutterNextHunk<CR>
+nnoremap [h :GitGutterPrevHunk<CR>
+
+let g:fern#renderer = 'nerdfont'
+let g:fern#default_hidden = 1
+let g:fzf_layout = { 'window': { 'width': 0.9, 'height': 0.8 } }
+let g:undotree_SetFocusWhenToggle = 1
+
+" ---------------------------------------------------------------- local ---
+if filereadable(expand('~/.vim/local.vim')) | source ~/.vim/local.vim | endif

@@ -1,0 +1,6 @@
+{
+  "_description": "ROS 2 topics/services/params through rosbridge (ros-mcp). Needs rosbridge_server running. It CAN publish commands: use with sims or keep permission prompts on",
+  "mcpServers": {
+    "ros-mcp": { "command": "uvx", "args": ["ros-mcp"] }
+  }
+}

@@ -1,0 +1,10 @@
+{
+  "_description": "GitHub (issues, PRs, code search). Uses $GITHUB_TOKEN from your environment",
+  "mcpServers": {
+    "github": {
+      "type": "http",
+      "url": "https://api.githubcopilot.com/mcp/",
+      "headers": { "Authorization": "Bearer ${GITHUB_TOKEN}" }
+    }
+  }
+}

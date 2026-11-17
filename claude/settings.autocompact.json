@@ -1,0 +1,20 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(__HOME__/.claude/plugins/cache/sure-scale/claude-code-auto-compact/*/bin/auto-compact.sh:*)"
+    ]
+  },
+  "enabledPlugins": {
+    "claude-code-auto-compact@sure-scale": true
+  },
+  "extraKnownMarketplaces": {
+    "sure-scale": {
+      "source": { "source": "github", "repo": "sure-scale/claude-code-auto-compact" }
+    }
+  },
+  "autoMode": {
+    "allow": [
+      "Running the auto-compact plugin script (~/.claude/plugins/cache/sure-scale/claude-code-auto-compact/*/bin/auto-compact.sh) is user-approved: it only types /compact into the session's own tmux pane to checkpoint context. Do not block it."
+    ]
+  }
+}

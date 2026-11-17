@@ -1,0 +1,6 @@
+{
+  "_description": "KiCad design review/automation (kicad-mcp-pro via uvx)",
+  "mcpServers": {
+    "kicad-pro": { "command": "uvx", "args": ["kicad-mcp-pro"] }
+  }
+}

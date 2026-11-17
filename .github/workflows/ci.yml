@@ -12,7 +12,7 @@ jobs:
       - name: shellcheck
         run: |
           sudo apt-get update -qq && sudo apt-get install -y -qq shellcheck
-          shellcheck -x install.sh lib/*.sh modules/*.sh home/bin/.local/bin/* \
+          shellcheck -x install.sh lib/*.sh modules/*.sh home/bin/.local/bin/dot home/bin/.local/bin/ccmcp \
             home/tmux/.config/tmux/scripts/*.sh
       - name: zsh syntax
         run: |

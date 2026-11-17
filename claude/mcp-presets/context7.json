@@ -1,0 +1,6 @@
+{
+  "_description": "Up-to-date library docs (ROS 2, Python libs, ...). Installed at user scope by install.sh",
+  "mcpServers": {
+    "context7": { "type": "http", "url": "https://mcp.context7.com/mcp" }
+  }
+}

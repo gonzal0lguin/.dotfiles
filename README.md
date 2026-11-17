@@ -155,7 +155,13 @@ Prefix is **`Ctrl+A`**.
 
 **Status bar** (`dot install tmux` to change): `stats` shows IP, CPU, RAM, NVIDIA GPU
 (when present) and date; `minimal` shows host and date. Colors use the terminal palette,
-so they follow the theme. Personal tweaks: `~/.config/tmux/local.conf` (untracked).
+so they follow the theme. Blocks drop out on narrow windows (IP < 100 columns, GPU < 90,
+date < 80). The dot on the left turns green while the prefix is held.
+
+**Window names** (optional): new windows get random Harry Potter, Star Wars and/or Marvel
+character names (pick any in the installer); each session sticks to one universe.
+
+Personal tweaks: `~/.config/tmux/local.conf` (untracked).
 
 **Autostart:** the installer can make Alacritty/kitty open straight into tmux
 (a new `tmux new-session` per window, so each terminal gets its own session). It's done by the terminal, not `.zshrc`, so VS Code terminals

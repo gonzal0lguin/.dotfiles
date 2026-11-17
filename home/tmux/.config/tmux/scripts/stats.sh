@@ -24,7 +24,7 @@ case ${1:-} in
     out=$(nvidia-smi --query-gpu=utilization.gpu,memory.used --format=csv,noheader,nounits 2>/dev/null | head -1) || exit 0
     [[ -n $out ]] || exit 0
     IFS=', ' read -r util mem <<<"$out"
-    printf '#[fg=blue,bg=default]#[fg=black,bg=blue] 󰢮 %s%% %.1fG #[fg=blue,bg=default] ' "$util" "$(awk "BEGIN{print $mem/1024}")"
+    printf '#[fg=black,bg=blue] 󰢮 %s%% %.1fG ' "$util" "$(awk "BEGIN{print $mem/1024}")"
     ;;
   ip)
     ip -4 route get 1.1.1.1 2>/dev/null | awk '{for (i=1;i<NF;i++) if ($i=="src") {print $(i+1); exit}}' || hostname -I | awk '{print $1}'

@@ -1,0 +1,8 @@
+# bat config. The theme comes from $BAT_THEME (set by the current dotfiles theme).
+--style="numbers,changes,header"
+--italic-text=always
+--map-syntax "*.launch:XML"
+--map-syntax "*.urdf:XML"
+--map-syntax "*.xacro:XML"
+--map-syntax "*.sdf:XML"
+--map-syntax ".env*:Bash"

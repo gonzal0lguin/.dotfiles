@@ -141,7 +141,7 @@ apt_install() {
 # ------------------------------------------------------------- downloads ---
 arch_name() { # style: x86_64|amd64
   local m; m=$(uname -m)
-  case "$1:$m" in
+  case "${1:-x86_64}:$m" in
     amd64:x86_64) echo amd64 ;; amd64:aarch64) echo arm64 ;;
     *:x86_64) echo x86_64 ;; *:aarch64) echo arm64 ;; *) echo "$m" ;;
   esac

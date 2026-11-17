@@ -25,7 +25,12 @@ fi
 
 # Theme (fzf colors, BAT_THEME, ...) — switched with `dot theme <name>`
 [[ -r $XDG_CONFIG_HOME/dotfiles/current/shell.zsh ]] && source $XDG_CONFIG_HOME/dotfiles/current/shell.zsh
-# Starship config generated for the current theme
-[[ -r $XDG_CONFIG_HOME/dotfiles/starship.toml ]] && export STARSHIP_CONFIG=$XDG_CONFIG_HOME/dotfiles/starship.toml
+# Starship config generated for the current theme (regenerated if the base changed)
+if [[ -r $XDG_CONFIG_HOME/dotfiles/starship.toml ]]; then
+  if [[ $XDG_CONFIG_HOME/starship.toml -nt $XDG_CONFIG_HOME/dotfiles/starship.toml ]] && (( $+commands[dot] )); then
+    dot theme "${$(readlink $XDG_CONFIG_HOME/dotfiles/current):t}" >/dev/null 2>&1
+  fi
+  export STARSHIP_CONFIG=$XDG_CONFIG_HOME/dotfiles/starship.toml
+fi
 
 (( $+commands[dircolors] )) && eval "$(dircolors -b)"

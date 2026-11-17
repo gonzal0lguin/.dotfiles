@@ -1,0 +1,8 @@
+# Images for `dpull <group>` (and the installer's optional pre-pull).
+# Format: <group> <image>. Add your own in ~/.config/dotfiles/docker-images.txt
+ros   ros:jazzy
+ros   osrf/ros:jazzy-desktop
+base  ubuntu:24.04
+base  ubuntu:22.04
+ml    nvidia/cuda:12.8.1-base-ubuntu24.04
+ml    python:3.12-slim

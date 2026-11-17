@@ -1,0 +1,49 @@
+# ~/.config/git/config — managed by dotfiles.
+# Your name/email (and anything machine-specific) live in ~/.gitconfig.local.
+[include]
+	path = ~/.gitconfig.local
+
+[core]
+	pager = delta
+	editor = vim
+	autocrlf = input
+	excludesFile = ~/.config/git/ignore
+[interactive]
+	diffFilter = delta --color-only
+[delta]
+	# colors follow $BAT_THEME (set by the dotfiles theme)
+	navigate = true
+	line-numbers = true
+	side-by-side = true
+	dark = true
+[diff]
+	algorithm = histogram
+	colorMoved = default
+[merge]
+	conflictStyle = zdiff3
+[init]
+	defaultBranch = main
+[pull]
+	rebase = true
+[rebase]
+	autoStash = true
+[push]
+	default = simple
+	autoSetupRemote = true
+[fetch]
+	prune = true
+[rerere]
+	enabled = true
+
+[alias]
+	s = status -sb
+	co = checkout
+	sw = switch
+	br = branch -vv
+	cm = commit -m
+	amend = commit --amend --no-edit
+	undo = reset --soft HEAD~1
+	unstage = restore --staged
+	last = log -1 HEAD --stat
+	lg = log --graph --date=relative --pretty=format:'%C(yellow)%h%C(reset) %C(blue)%ad%C(reset) %s%C(auto)%d %C(dim)<%an>%C(reset)'
+	ls = ls-files

@@ -1,8 +1,8 @@
 # shellcheck shell=bash
-module base on "Core packages (git, curl, stow, jq, whiptail...) + the 'dot' command"
+module base on "Core packages (git, curl, stow, jq...) + the 'dot' command"
 
 base_install() {
-  apt_install git curl wget ca-certificates gnupg stow jq unzip xz-utils fontconfig whiptail
+  apt_install git curl wget ca-certificates gnupg stow jq unzip xz-utils fontconfig
   run mkdir -p "$LOCAL_BIN" "$STATE_DIR"
   state_set DOTFILES_DIR "$DOTFILES_DIR"
   link_pkg bin

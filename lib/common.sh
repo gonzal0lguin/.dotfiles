@@ -48,12 +48,7 @@ run() {
 ask() {
   local q=$1 def=${2:-y} reply
   if (( ASSUME_YES )) || [[ ! -t 0 ]]; then [[ $def == y ]]; return; fi
-  if has whiptail; then
-    local args=(--title "dotfiles" --yesno "$q" 10 70)
-    [[ $def == n ]] && args=(--defaultno "${args[@]}")
-    whiptail "${args[@]}" 3>&1 1>&2 2>&3
-    return
-  fi
+  if [[ -e /dev/tty ]] && declare -F ui_confirm >/dev/null; then ui_confirm "$q" "$def"; return; fi
   read -r -p "$q [$( [[ $def == y ]] && echo Y/n || echo y/N )] " reply
   reply=${reply:-$def}
   [[ $reply =~ ^[Yy] ]]
@@ -64,13 +59,8 @@ ask() {
 choose() {
   local q=$1 def=$2; shift 2
   if (( ASSUME_YES )) || [[ ! -t 0 ]]; then echo "$def"; return; fi
-  if has whiptail; then
-    local items=() tag desc
-    while (( $# )); do
-      tag=$1 desc=$2; shift 2
-      items+=("$tag" "$desc" "$([[ $tag == "$def" ]] && echo ON || echo OFF)")
-    done
-    whiptail --title "dotfiles" --radiolist "$q" 18 76 8 "${items[@]}" 3>&1 1>&2 2>&3 || echo "$def"
+  if [[ -e /dev/tty ]] && declare -F ui_select >/dev/null; then
+    ui_select "$q" "$def" "$@" || kill -INT $$
     return
   fi
   local opts=() i=1 reply

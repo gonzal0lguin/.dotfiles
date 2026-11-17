@@ -49,7 +49,7 @@ Any file the installer would replace is moved to `~/.dotfiles-backup/<date>/` fi
 
 | Module | What you get | Default |
 |---|---|---|
-| `base` | git, curl, stow, jq, whiptail… and the `dot` command | always |
+| `base` | git, curl, stow, jq… and the `dot` command | always |
 | `fonts` | **0xProto Nerd Font** (latest nerd-fonts release) | on |
 | `themes` | one theme for every app: `catppuccin-mocha` or `gruvbox-dark` | on |
 | `zsh` | modular zsh, **antidote** plugins, untracked `local.zsh` + `secrets.zsh` | on |

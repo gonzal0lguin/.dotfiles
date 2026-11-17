@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 # dotfiles installer — see README.md
 #
-#   ./install.sh                 interactive: pick modules + options (whiptail)
+#   ./install.sh                 interactive: pick modules + options (arrow-key menus)
 #   ./install.sh --all [-y]      install every default module, no questions with -y
 #   ./install.sh zsh tmux        install only these modules
 #   ./install.sh --dry-run ...   show what would happen
@@ -14,6 +14,8 @@ export DOTFILES_DIR
 source "$DOTFILES_DIR/lib/common.sh"
 # shellcheck source=lib/theme.sh
 [[ -f $DOTFILES_DIR/lib/theme.sh ]] && source "$DOTFILES_DIR/lib/theme.sh"
+# shellcheck source=lib/ui.sh
+source "$DOTFILES_DIR/lib/ui.sh"
 
 MODULES=()               # registration order
 declare -A MOD_DESC=() MOD_DEFAULT=()
@@ -72,17 +74,12 @@ if (( ${#REQUESTED[@]} )); then
   SELECTED=("${REQUESTED[@]}")
 elif (( SELECT_ALL )) || (( ASSUME_YES )); then
   for m in "${MODULES[@]}"; do [[ ${MOD_DEFAULT[$m]} == on ]] && SELECTED+=("$m"); done
-elif [[ -t 0 ]] && has whiptail; then
-  items=()
-  for m in "${MODULES[@]}"; do items+=("$m" "${MOD_DESC[$m]}" "${MOD_DEFAULT[$m]^^}"); done
-  choice=$(whiptail --title "dotfiles" --separate-output \
-    --checklist "Select what to install (space = toggle, enter = confirm)" 24 90 15 \
-    "${items[@]}" 3>&1 1>&2 2>&3) || die "cancelled"
-  mapfile -t SELECTED <<<"$choice"
 elif [[ -t 0 ]]; then
-  for m in "${MODULES[@]}"; do
-    ask "Install ${m}? (${MOD_DESC[$m]})" "$([[ ${MOD_DEFAULT[$m]} == on ]] && echo y || echo n)" && SELECTED+=("$m")
-  done
+  trap '_ui_cleanup; printf "\n"; exit 130' INT
+  items=()
+  for m in "${MODULES[@]}"; do items+=("$m" "${MOD_DESC[$m]}" "${MOD_DEFAULT[$m]}"); done
+  choice=$(ui_multi "What should be installed?" "${items[@]}") || die "cancelled"
+  mapfile -t SELECTED <<<"$choice"
 else
   usage; exit 1
 fi

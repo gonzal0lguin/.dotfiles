@@ -5,7 +5,7 @@ module alacritty on "Alacritty terminal from apt (no cargo)"
 _ask_tmux_autostart() {
   [[ -n ${TMUX_AUTOSTART:-} ]] && return
   local cur; cur=$(state_get TMUX_AUTOSTART no)
-  if ask "Open new terminal windows directly inside tmux (session 'main')?" "${cur:0:1}"; then
+  if ask "Open new terminal windows directly inside tmux (a new session per window)?" "${cur:0:1}"; then
     TMUX_AUTOSTART=yes
   else
     TMUX_AUTOSTART=no

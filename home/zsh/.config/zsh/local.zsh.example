@@ -10,4 +10,4 @@
 # alias myenv='source ~/python-venvs/my_env/bin/activate'
 
 # --- tmux autostart (normally done by the terminal, see README) -----------------
-# [[ -z $TMUX && $TERM_PROGRAM != vscode ]] && exec tmux new-session -A -s main
+# [[ -z $TMUX && $TERM_PROGRAM != vscode ]] && exec tmux new-session

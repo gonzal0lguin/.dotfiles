@@ -23,7 +23,7 @@ $haskell\
 [](fg:color_blue bg:color_bg3)\
 $docker_context\
 $conda\
-${env_var.ROS_DISTRO}\
+${custom.ros}\
 [](fg:color_bg3 bg:color_bg1)\
 $cmd_duration\
 [ ](fg:color_bg1)\
@@ -166,10 +166,15 @@ format = '[[ $symbol( $context) ](fg:color_accent bg:color_bg3)]($style)'
 style = "bg:color_bg3"
 format = '[[ $symbol( $environment) ](fg:color_accent bg:color_bg3)]($style)'
 
-[env_var.ROS_DISTRO]
+# ROS distro, only once a colcon workspace is sourced (COLCON_PREFIX_PATH is set
+# by a workspace's install/setup.*, not by /opt/ros/<distro>/setup.*)
+[custom.ros]
+when = '[ -n "$COLCON_PREFIX_PATH" ]'
+command = 'echo "$ROS_DISTRO"'
+shell = ["sh"]
 symbol = '󰚩'
 style = "bg:color_bg3"
-format = '[[ $symbol $env_value ](fg:color_accent bg:color_bg3)]($style)'
+format = '[[ $symbol $output ](fg:color_accent bg:color_bg3)]($style)'
 
 [cmd_duration]
 disabled = false

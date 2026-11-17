@@ -158,7 +158,7 @@ Prefix is **`Ctrl+A`**.
 so they follow the theme. Personal tweaks: `~/.config/tmux/local.conf` (untracked).
 
 **Autostart:** the installer can make Alacritty/kitty open straight into tmux
-(`tmux new -A -s main`). It's done by the terminal, not `.zshrc`, so VS Code terminals
+(a new `tmux new-session` per window, so each terminal gets its own session). It's done by the terminal, not `.zshrc`, so VS Code terminals
 and ssh sessions aren't affected. Off by default.
 
 ## Terminals

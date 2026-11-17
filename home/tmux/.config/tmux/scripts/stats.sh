@@ -13,10 +13,10 @@ case ${1:-} in
       ((dt > 0)) && pct=$(((100 * (dt - di)) / dt))
     fi
     echo "$total $idle" >"$f"
-    printf '%2d%%' "$pct"
+    printf '%d%%' "$pct"
     ;;
   ram)
-    free -m | awk '/^Mem:/ {printf "%.1f/%.0fG", $3/1024, $2/1024}'
+    free -m | awk '/^Mem:/ {printf "%.1fG", $3/1024}'
     ;;
   gpu)
     # prints a whole segment, or nothing when there is no NVIDIA GPU

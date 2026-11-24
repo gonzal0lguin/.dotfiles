@@ -4,9 +4,9 @@ set -Eeuo pipefail
 
 DOTFILES_DIR="$(cd "$(dirname "$(readlink -f "${BASH_SOURCE[0]}")")/../../../.." && pwd -P)"
 export DOTFILES_DIR
-# shellcheck source=../../../../lib/common.sh
+# shellcheck source=lib/common.sh
 source "$DOTFILES_DIR/lib/common.sh"
-# shellcheck source=../../../../lib/theme.sh
+# shellcheck source=lib/theme.sh
 [[ -f $DOTFILES_DIR/lib/theme.sh ]] && source "$DOTFILES_DIR/lib/theme.sh"
 
 usage() {

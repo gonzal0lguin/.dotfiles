@@ -15,7 +15,7 @@ tmux_configure() {
       harrypotter "Harry Potter" "$([[ " $names " == *" harrypotter "* ]] && echo on || echo off)" \
       starwars "Star Wars" "$([[ " $names " == *" starwars "* ]] && echo on || echo off)" \
       marvel "Marvel" "$([[ " $names " == *" marvel "* ]] && echo on || echo off)") || die "cancelled"
-    TMUX_RANDOM_NAMES=$(echo $picked)
+    TMUX_RANDOM_NAMES=$(xargs <<<"$picked")   # newline list -> one line
     TMUX_RANDOM_NAMES=${TMUX_RANDOM_NAMES// /,}
     : "${TMUX_RANDOM_NAMES:=no}"
   fi

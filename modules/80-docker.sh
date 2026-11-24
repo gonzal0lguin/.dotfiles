@@ -103,7 +103,7 @@ docker_install() {
       "https://github.com/wagoodman/dive/releases/download/${tag}/dive_${tag#v}_linux_$(arch_name amd64).tar.gz"
   fi
 
-  local pull=${DOCKER_PULL:-none} line group image
+  local pull=${DOCKER_PULL:-none} group image
   if [[ $pull != none ]] && (( ! DRY_RUN )); then
     if docker info >/dev/null 2>&1; then
       while read -r group image; do

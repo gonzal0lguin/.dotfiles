@@ -1,0 +1,29 @@
+#!/usr/bin/env bash
+# ccmcp — add Claude Code MCP server presets to ./.mcp.json (project scope).
+#   ccmcp list            show presets
+#   ccmcp show <preset>   print a preset
+#   ccmcp <preset>...     merge presets into ./.mcp.json (commit it to share)
+set -Eeuo pipefail
+DOTFILES_DIR="$(cd "$(dirname "$(readlink -f "${BASH_SOURCE[0]}")")/../../../.." && pwd -P)"
+PRESETS="$DOTFILES_DIR/claude/mcp-presets"
+command -v jq >/dev/null || { echo "ccmcp: jq is required" >&2; exit 1; }
+
+case ${1:-list} in
+  list|-l)
+    for f in "$PRESETS"/*.json; do
+      printf '  %-10s %s\n' "$(basename "$f" .json)" "$(jq -r '._description // ""' "$f")"
+    done ;;
+  show) jq '.mcpServers' "$PRESETS/${2:?usage: ccmcp show <preset>}.json" ;;
+  -h|--help) sed -n '2,6p' "$0" | sed 's/^# \{0,1\}//' ;;
+  *)
+    target=.mcp.json
+    [[ -f $target ]] || echo '{"mcpServers": {}}' >"$target"
+    for p in "$@"; do
+      f="$PRESETS/$p.json"
+      [[ -f $f ]] || { echo "ccmcp: unknown preset '$p' (ccmcp list)" >&2; exit 1; }
+      tmp=$(mktemp)
+      jq --slurpfile p "$f" '.mcpServers = ((.mcpServers // {}) + $p[0].mcpServers)' "$target" >"$tmp" && mv "$tmp" "$target"
+      echo "added $(jq -r '.mcpServers | keys | join(", ")' "$f") to $PWD/$target"
+    done
+    echo "Restart claude in this directory and approve the project servers." ;;
+esac

@@ -1,0 +1,76 @@
+#!/usr/bin/env bash
+# dot — small helper around this dotfiles repo.
+set -Eeuo pipefail
+
+DOTFILES_DIR="$(cd "$(dirname "$(readlink -f "${BASH_SOURCE[0]}")")/../../../.." && pwd -P)"
+export DOTFILES_DIR
+# shellcheck source=../../../../lib/common.sh
+source "$DOTFILES_DIR/lib/common.sh"
+# shellcheck source=../../../../lib/theme.sh
+[[ -f $DOTFILES_DIR/lib/theme.sh ]] && source "$DOTFILES_DIR/lib/theme.sh"
+
+usage() {
+  cat <<EOF
+usage: dot <command>
+
+  update            git pull the repo, re-link, update zsh/tmux/vim plugins
+  install [args]    run install.sh (same arguments, e.g. 'dot install tmux')
+  theme [name]      list themes, or switch every app to <name>
+  link <pkg>        (re)link one package from home/  (e.g. dot link tmux)
+  unlink <pkg>      remove the links of one package
+  edit              open the repo in \$EDITOR
+  cd                print the repo path   (cd "\$(dot cd)")
+  doctor            check that the expected tools are installed
+EOF
+}
+
+cmd_update() {
+  step "Updating repo"
+  git -C "$DOTFILES_DIR" pull --ff-only
+  step "Re-linking packages"
+  local pkg
+  for pkg in "$DOTFILES_DIR"/home/*/; do
+    pkg=$(basename "$pkg")
+    # only re-link packages that were installed before (new files get linked)
+    [[ $(state_get "linked_$pkg") == 1 ]] && link_pkg "$pkg"
+  done
+  if [[ -d ${XDG_DATA_HOME:-$HOME/.local/share}/antidote ]]; then
+    step "Updating zsh plugins"
+    zsh -ic 'antidote update' || warn "antidote update failed"
+  fi
+  local tpm_dir="${XDG_DATA_HOME:-$HOME/.local/share}/tmux/plugins"
+  if [[ -d $tpm_dir ]]; then
+    step "Updating tmux plugins"
+    for d in "$tpm_dir"/*/; do git -C "$d" pull --ff-only -q && ok "$(basename "$d")"; done
+  fi
+  if [[ -f $HOME/.vim/autoload/plug.vim ]]; then
+    step "Updating vim plugins"
+    vim -es -i NONE -c 'PlugUpgrade' -c 'PlugUpdate --sync' -c 'qa' || true
+  fi
+  ok "up to date"
+}
+
+cmd_doctor() {
+  local t missing=0
+  for t in zsh tmux git stow starship fzf zoxide bat fd rg eza delta btop jq vim docker claude alacritty kitty; do
+    if has "$t"; then ok "$t"; else warn "$t missing"; missing=1; fi
+  done
+  if fc-list | grep -qi '0xProto Nerd'; then ok "0xProto Nerd Font"; else warn "0xProto Nerd Font missing"; missing=1; fi
+  if [[ $SHELL == */zsh ]]; then ok "login shell is zsh"; else warn "login shell is $SHELL (run: chsh -s \$(command -v zsh))"; fi
+  return "$missing"
+}
+
+case ${1:-help} in
+  update) cmd_update ;;
+  install) shift; exec "$DOTFILES_DIR/install.sh" "$@" ;;
+  theme)
+    declare -F apply_theme >/dev/null || die "themes are not available"
+    if [[ -n ${2:-} ]]; then apply_theme "$2"; else list_themes; fi ;;
+  link) [[ -n ${2:-} ]] || die "usage: dot link <pkg>"; link_pkg "$2" ;;
+  unlink) [[ -n ${2:-} ]] || die "usage: dot unlink <pkg>"; unlink_pkg "$2" ;;
+  edit) cd "$DOTFILES_DIR" && exec "${EDITOR:-vim}" . ;;
+  cd) echo "$DOTFILES_DIR" ;;
+  doctor) cmd_doctor ;;
+  help|-h|--help) usage ;;
+  *) usage; exit 1 ;;
+esac

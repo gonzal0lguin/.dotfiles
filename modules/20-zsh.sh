@@ -13,7 +13,11 @@ zsh_install() {
   git_sync https://github.com/mattmc3/antidote "${XDG_DATA_HOME:-$HOME/.local/share}/antidote"
   # Pre-fetch plugins so the first shell starts instantly.
   if has zsh && (( ! DRY_RUN )); then
-    zsh -ic 'exit' >/dev/null 2>&1 && ok "zsh plugins installed" || warn "first zsh start reported errors; run 'zsh' to see them"
+    if zsh -ic 'exit' >/dev/null 2>&1; then
+      ok "zsh plugins installed"
+    else
+      warn "first zsh start reported errors; run 'zsh' to see them"
+    fi
   fi
 
   local login_shell

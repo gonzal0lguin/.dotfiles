@@ -18,8 +18,11 @@ cli_install() {
   local bt="${XDG_CONFIG_HOME:-$HOME/.config}/btop/themes/catppuccin_mocha.theme"
   if [[ ! -f $bt ]] && (( ! DRY_RUN )); then
     mkdir -p "$(dirname "$bt")"
-    curl -fsSL https://raw.githubusercontent.com/catppuccin/btop/main/themes/catppuccin_mocha.theme -o "$bt" \
-      && ok "btop catppuccin theme" || warn "could not download btop theme"
+    if curl -fsSL https://raw.githubusercontent.com/catppuccin/btop/main/themes/catppuccin_mocha.theme -o "$bt"; then
+      ok "btop catppuccin theme"
+    else
+      warn "could not download btop theme"
+    fi
   fi
 
   # lazygit (not packaged for Ubuntu 24.04)

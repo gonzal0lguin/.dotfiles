@@ -3,6 +3,8 @@
 # Each session sticks to one universe, picked at random from @name_themes
 # (set by the installer, e.g. "harrypotter starwars marvel").
 #   random_window_name.sh session|window <window_id>
+# The name arrays are read indirectly through a nameref (declare -n) below.
+# shellcheck disable=SC2034
 
 harrypotter=(harry hermione ron dumbledore hagrid snape mcgonagall dobby neville
   draco voldemort ginny luna fred george cho cedric sirius remus tonks bellatrix

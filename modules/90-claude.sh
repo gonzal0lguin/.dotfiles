@@ -57,13 +57,18 @@ claude_install() {
   if (( ! DRY_RUN )) && [[ -x $(command -v "$cc") ]]; then
     if [[ $autocompact == yes ]] && ! "$cc" plugin list 2>/dev/null | grep -q claude-code-auto-compact; then
       "$cc" plugin marketplace add sure-scale/claude-code-auto-compact >/dev/null 2>&1 || true
-      "$cc" plugin install claude-code-auto-compact@sure-scale >/dev/null 2>&1 \
-        && ok "installed auto-compact plugin" \
-        || manual "Install the auto-compact plugin inside claude: /plugin install claude-code-auto-compact@sure-scale"
+      if "$cc" plugin install claude-code-auto-compact@sure-scale >/dev/null 2>&1; then
+        ok "installed auto-compact plugin"
+      else
+        manual "Install the auto-compact plugin inside claude: /plugin install claude-code-auto-compact@sure-scale"
+      fi
     fi
     if [[ $context7 == yes ]] && ! "$cc" mcp get context7 >/dev/null 2>&1; then
-      "$cc" mcp add --scope user --transport http context7 https://mcp.context7.com/mcp >/dev/null 2>&1 \
-        && ok "added context7 MCP (user scope)" || warn "could not add context7 MCP"
+      if "$cc" mcp add --scope user --transport http context7 https://mcp.context7.com/mcp >/dev/null 2>&1; then
+        ok "added context7 MCP (user scope)"
+      else
+        warn "could not add context7 MCP"
+      fi
     fi
   fi
   info "project MCP presets: ccmcp list   (e.g. 'ccmcp kicad' inside a KiCad repo)"

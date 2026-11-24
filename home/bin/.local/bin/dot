@@ -51,13 +51,13 @@ cmd_update() {
 }
 
 cmd_doctor() {
-  local t missing=0
+  local t problems=0
   for t in zsh tmux git stow starship fzf zoxide bat fd rg eza delta btop jq vim docker claude alacritty kitty; do
-    if has "$t"; then ok "$t"; else warn "$t missing"; missing=1; fi
+    if has "$t"; then ok "$t"; else warn "$t missing"; problems=1; fi
   done
-  if fc-list | grep -qi '0xProto Nerd'; then ok "0xProto Nerd Font"; else warn "0xProto Nerd Font missing"; missing=1; fi
+  if fc-list | grep -qi '0xProto Nerd'; then ok "0xProto Nerd Font"; else warn "0xProto Nerd Font missing"; problems=1; fi
   if [[ $SHELL == */zsh ]]; then ok "login shell is zsh"; else warn "login shell is $SHELL (run: chsh -s \$(command -v zsh))"; fi
-  return "$missing"
+  return "$problems"
 }
 
 case ${1:-help} in
